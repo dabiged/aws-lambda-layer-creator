@@ -1,10 +1,14 @@
 #!/bin/sh
+###################################################################################
+# This code was taken from https://github.com/srcecde/aws-lambda-layer-creator    #
+###################################################################################
 
 set -e
 
 layername="$1"
 runtime="$2"
-packages="${@:3}"
+shift 2
+packages="$@"
 
 echo "================================="
 
@@ -16,9 +20,9 @@ echo "================================="
 
 host_temp_dir="$(mktemp -d)"
 
-support_python_runtime=("python3.6,python3.7,python3.8,python3.9,python3.10,python3.11,python3.12")
+support_python_runtime=("python3.9,python3.10,python3.11,python3.12,python3.13")
 
-support_node_runtime=("nodejs10.x,nodejs12.x,nodejs14.x,nodejs16.x,nodejs18.x,nodejs20.x")
+support_node_runtime=("nodejs18.x,nodejs20.x,nodejs22.x")
 
 if [[ "${support_node_runtime[*]}" =~ "${runtime}" ]]; then
     
@@ -36,6 +40,7 @@ elif [[ "${support_python_runtime[*]}" =~ "${runtime}" ]]; then
 
 else
     echo "Invalid runtime"
+    echo "Valid runtimes are listed here: https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html"
     exit 1
 fi
 
